@@ -1,0 +1,11 @@
+Model Information:
+* title:	Colloseum 01
+* source:	https://sketchfab.com/3d-models/colloseum-01-b58c0ab8d51f47628dcfa7b82f1e2f8f
+* author:	3D for Humans by TSI Org (https://sketchfab.com/tsiorg)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Colloseum 01" (https://sketchfab.com/3d-models/colloseum-01-b58c0ab8d51f47628dcfa7b82f1e2f8f) by 3D for Humans by TSI Org (https://sketchfab.com/tsiorg) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
