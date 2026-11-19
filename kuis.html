@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arena Kuis Seru — EduGlobe</title>
+  <!-- Font Ramah Anak dari Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background-color: #090d16;
+      background-image:
+        radial-gradient(2px 2px at 15% 20%, #ffffff 60%, transparent 100%),
+        radial-gradient(2px 2px at 35% 75%, #fef08a 60%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 55% 15%, #ffffff 60%, transparent 100%),
+        radial-gradient(2.5px 2.5px at 78% 30%, #bae6fd 60%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 85% 70%, #ffffff 60%, transparent 100%),
+        radial-gradient(2px 2px at 22% 55%, #ffffff 60%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 68% 85%, #fef08a 60%, transparent 100%),
+        radial-gradient(circle at 50% 35%, #172554 0%, #090d16 78%);
+      background-attachment: fixed;
+      font-family: 'Nunito', sans-serif;
+      color: #1e293b;
+      padding: 20px 18px 48px 18px;
+    }
+
+    .kontainer-utama {
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    /* =========================================
+       BAR NAVIGASI & TOTAL BINTANG ATAS
+       ========================================= */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 22px;
+    }
+
+    .btn-beranda {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #facc15;
+      color: #713f12;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 800;
+      padding: 11px 18px;
+      border-radius: 18px;
+      border: 3px solid #ca8a04;
+      box-shadow: 0 5px 0 #a16207;
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+    }
+
+    .btn-beranda:active {
+      transform: translateY(4px);
+      box-shadow: 0 1px 0 #a16207;
+    }
+
+    .lencana-total-bintang {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #fef9c3;
+      color: #713f12;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      padding: 10px 20px;
+      border-radius: 999px;
+      border: 3px solid #facc15;
+      box-shadow: 0 5px 0 #ca8a04;
+    }
+
+    .lencana-total-bintang .ikon-bintang {
+      font-size: 21px;
+      filter: drop-shadow(0 2px 0 #eab308);
+    }
+
+    /* =========================================
+       HEADER JUDUL & PROGRESS BINTANG
+       ========================================= */
+    .kartu-header {
+      background: #ffffff;
+      border-radius: 26px;
+      border: 4px solid #38bdf8;
+      box-shadow: 0 8px 0 #0284c7;
+      padding: 22px 26px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .teks-header h1 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 28px;
+      color: #0284c7;
+      line-height: 1.2;
+    }
+
+    .teks-header p {
+      margin-top: 6px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #475569;
+    }
+
+    .kotak-progres {
+      min-width: 240px;
+      flex: 0 1 300px;
+      background: #f0f9ff;
+      border: 3px solid #7dd3fc;
+      border-radius: 18px;
+      padding: 12px 16px;
+    }
+
+    .label-progres {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 800;
+      color: #0369a1;
+      margin-bottom: 8px;
+    }
+
+    .rel-progres {
+      width: 100%;
+      height: 14px;
+      background: #bae6fd;
+      border-radius: 999px;
+      overflow: hidden;
+      border: 2px solid #38bdf8;
+    }
+
+    .isi-progres {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #facc15, #f59e0b);
+      border-radius: 999px;
+      transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* =========================================
+       GRID PILIHAN KUIS
+       ========================================= */
+    .grid-kuis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 22px;
+    }
+
+    .kartu-kuis {
+      background: #ffffff;
+      border-radius: 26px;
+      border: 4px solid var(--warna-border, #2dd4bf);
+      box-shadow: 0 8px 0 var(--warna-shadow, #0d9488);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .kartu-kuis:not(.terkunci):hover {
+      transform: translateY(-5px);
+    }
+
+    .bagian-atas-kartu {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .ikon-kuis {
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      background: var(--warna-soft, #ccfbf1);
+      border: 3px solid var(--warna-border, #2dd4bf);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+    }
+
+    .badge-kategori {
+      font-size: 12px;
+      font-weight: 800;
+      padding: 5px 12px;
+      border-radius: 999px;
+      background: var(--warna-soft, #ccfbf1);
+      color: var(--warna-teks, #0f766e);
+      border: 2px solid var(--warna-border, #2dd4bf);
+    }
+
+    .kartu-kuis h2 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 22px;
+      color: #0f172a;
+      margin-bottom: 8px;
+    }
+
+    .kartu-kuis p {
+      font-size: 14.5px;
+      font-weight: 700;
+      line-height: 1.55;
+      color: #475569;
+      margin-bottom: 18px;
+    }
+
+    /* Kotak Bintang Per Kuis */
+    .kotak-bintang-kuis {
+      background: #fefce8;
+      border: 2.5px solid #fde047;
+      border-radius: 16px;
+      padding: 10px 14px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .deret-bintang {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 22px;
+    }
+
+    .bintang-mati {
+      filter: grayscale(100%) opacity(0.32);
+    }
+
+    .status-bintang {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: #854d0e;
+      text-align: right;
+    }
+
+    /* Tombol Mulai Bermain */
+    .btn-mulai {
+      display: block;
+      width: 100%;
+      text-align: center;
+      text-decoration: none;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 17px;
+      font-weight: 600;
+      color: #ffffff;
+      background: var(--warna-tombol, #14b8a6);
+      border: 3px solid var(--warna-shadow, #0f766e);
+      box-shadow: 0 5px 0 var(--warna-shadow, #0f766e);
+      padding: 12px 16px;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .btn-mulai:active {
+      transform: translateY(4px);
+      box-shadow: 0 1px 0 var(--warna-shadow, #0f766e);
+    }
+
+    /* Kartu Segera Hadir (Untuk Kuis Mendatang) */
+    .kartu-kuis.terkunci {
+      opacity: 0.85;
+      --warna-border: #94a3b8;
+      --warna-shadow: #475569;
+      --warna-soft: #f1f5f9;
+      --warna-teks: #475569;
+    }
+
+    .kartu-kuis.terkunci .btn-mulai {
+      background: #94a3b8;
+      border-color: #64748b;
+      box-shadow: 0 4px 0 #475569;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* =========================================
+       RESPONSIF MOBILE (HP)
+       ========================================= */
+    @media (max-width: 640px) {
+      .teks-header h1 {
+        font-size: 23px;
+      }
+
+      .kotak-progres {
+        width: 100%;
+        flex: 1 1 100%;
+      }
+
+      .lencana-total-bintang {
+        font-size: 15px;
+        padding: 9px 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="kontainer-utama">
+    <!-- Bar Navigasi & Total Bintang -->
+    <div class="top-bar">
+      <a href="index.html" class="btn-beranda">← Beranda</a>
+
+      <div class="lencana-total-bintang" id="total-bintang-badge">
+        <span class="ikon-bintang">⭐</span>
+        <span id="teks-total-bintang">0 / 12 Bintang</span>
+      </div>
+    </div>
+
+    <!-- Header Judul & Bilah Progres -->
+    <div class="kartu-header">
+      <div class="teks-header">
+        <h1>🎯 Arena Kuis EduGlobe</h1>
+        <p>Pilih tantangan kuis di bawah ini dan kumpulkan semua bintangnya!</p>
+      </div>
+
+      <div class="kotak-progres">
+        <div class="label-progres">
+          <span>Koleksi Bintangmu</span>
+          <span id="persen-progres">0%</span>
+        </div>
+        <div class="rel-progres">
+          <div class="isi-progres" id="bar-progres"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Daftar Kartu Kuis (Otomatis dirender dari JavaScript) -->
+    <div class="grid-kuis" id="wadah-grid-kuis"></div>
+  </div>
+
+  <script>
+    // ========================================================
+    // 1. DAFTAR KUIS (TAMBAH KUIS BARU CUKUP DI ARRAY INI)
+    // ========================================================
+    const daftarKuis = [
+      {
+        id: "tebak-landmark",
+        judul: "Kuis Tebak Landmark",
+        kategori: "🏛️ Bangunan Ikonik",
+        ikon: "🗿",
+        deskripsi: "Kenali keajaiban bangunan dan monumen terkenal dari Indonesia hingga penjuru dunia lewat petunjuk dan gambar!",
+        halaman: "kuis-landmark.html",
+        maksBintang: 3,
+        aktif: true,
+        tema: {
+          border: "#2dd4bf",
+          shadow: "#0d9488",
+          soft: "#ccfbf1",
+          teks: "#0f766e",
+          tombol: "#14b8a6"
+        }
+      },
+      {
+        id: "tebak-negara",
+        judul: "Kuis Tebak Negara",
+        kategori: "🌍 Geografi Dunia",
+        ikon: "🗺️",
+        deskripsi: "Uji pengetahuanmu tentang nama negara, keunikan wilayah, dan fakta seru dari berbagai benua di bola dunia!",
+        halaman: "kuis-negara.html",
+        maksBintang: 3,
+        aktif: true,
+        tema: {
+          border: "#38bdf8",
+          shadow: "#0284c7",
+          soft: "#e0f2fe",
+          teks: "#0369a1",
+          tombol: "#0ea5e9"
+        }
+      },
+      {
+        id: "tebak-bendera",
+        judul: "Kuis Tebak Bendera",
+        kategori: "🚩 Simbol Negara",
+        ikon: "🏁",
+        deskripsi: "Cocokkan warna dan corak bendera kebangsaan dari berbagai negara di Asia, Eropa, Amerika, Afrika, dan Oseania!",
+        halaman: "kuis-bendera.html",
+        maksBintang: 3,
+        aktif: true,
+        tema: {
+          border: "#fbbf24",
+          shadow: "#b45309",
+          soft: "#fef3c7",
+          teks: "#92400e",
+          tombol: "#f59e0b"
+        }
+      },
+      {
+        id: "tebak-ibukota",
+        judul: "Kuis Ibu Kota Dunia",
+        kategori: "🏙️ Pusat Pemerintahan",
+        ikon: "🧭",
+        deskripsi: "Masih ingat nama ibu kota dari negara-negara yang sudah kamu jelajahi di peta globe? Ayo buktikan di sini!",
+        halaman: "kuis-ibukota.html",
+        maksBintang: 3,
+        aktif: true,
+        tema: {
+          border: "#c084fc",
+          shadow: "#7e22ce",
+          soft: "#f3e8ff",
+          teks: "#6b21a8",
+          tombol: "#a855f7"
+        }
+      },
+      {
+        id: "tantangan-waktu",
+        judul: "Tantangan Cepat 60 Detik",
+        kategori: "⚡ Mode Segera Hadir",
+        ikon: "🚀",
+        deskripsi: "Jawab sebanyak mungkin pertanyaan campuran landmark dan negara sebelum waktu habis! Kuis baru akan segera hadir.",
+        halaman: "#",
+        maksBintang: 3,
+        aktif: false,
+        tema: {}
+      }
+    ];
+
+    // ========================================================
+    // 2. SISTEM PENYIMPANAN & TAMPILAN BINTANG (localStorage)
+    // ========================================================
+    const KUNCI_PENYIMPANAN = "eduglobe_bintang_kuis";
+
+    function ambilDataBintang() {
+      try {
+        return JSON.parse(localStorage.getItem(KUNCI_PENYIMPANAN)) || {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function buatIkonBintang(jumlahDidapat, maksimal) {
+      let html = "";
+      for (let i = 1; i <= maksimal; i++) {
+        if (i <= jumlahDidapat) {
+          html += `<span>⭐</span>`;
+        } else {
+          html += `<span class="bintang-mati">⭐</span>`;
+        }
+      }
+      return html;
+    }
+
+    function renderHalamanKuis() {
+      const wadah = document.getElementById("wadah-grid-kuis");
+      const dataBintang = ambilDataBintang();
+
+      let totalDidapat = 0;
+      let totalMaksimal = 0;
+      wadah.innerHTML = "";
+
+      daftarKuis.forEach(kuis => {
+        const bintangKuis = Math.min(dataBintang[kuis.id] || 0, kuis.maksBintang);
+
+        if (kuis.aktif) {
+          totalDidapat += bintangKuis;
+          totalMaksimal += kuis.maksBintang;
+        }
+
+        const kartu = document.createElement("div");
+        kartu.className = `kartu-kuis ${kuis.aktif ? "" : "terkunci"}`;
+
+        if (kuis.aktif && kuis.tema) {
+          kartu.style.setProperty("--warna-border", kuis.tema.border);
+          kartu.style.setProperty("--warna-shadow", kuis.tema.shadow);
+          kartu.style.setProperty("--warna-soft", kuis.tema.soft);
+          kartu.style.setProperty("--warna-teks", kuis.tema.teks);
+          kartu.style.setProperty("--warna-tombol", kuis.tema.tombol);
+        }
+
+        let teksStatus = "Belum dimainkan";
+        if (!kuis.aktif) {
+          teksStatus = "Segera hadir";
+        } else if (bintangKuis === kuis.maksBintang) {
+          teksStatus = "Sempurna! 🎉";
+        } else if (bintangKuis > 0) {
+          teksStatus = `${bintangKuis}/${kuis.maksBintang} Bintang`;
+        }
+
+        kartu.innerHTML = `
+          <div>
+            <div class="bagian-atas-kartu">
+              <div class="ikon-kuis">${kuis.ikon}</div>
+              <span class="badge-kategori">${kuis.kategori}</span>
+            </div>
+            <h2>${kuis.judul}</h2>
+            <p>${kuis.deskripsi}</p>
+          </div>
+
+          <div>
+            <div class="kotak-bintang-kuis">
+              <div class="deret-bintang">
+                ${buatIkonBintang(bintangKuis, kuis.maksBintang)}
+              </div>
+              <span class="status-bintang">${teksStatus}</span>
+            </div>
+
+            <a href="${kuis.aktif ? kuis.halaman : 'javascript:void(0)'}" class="btn-mulai">
+              ${kuis.aktif ? (bintangKuis > 0 ? "🔄 Main Lagi" : "▶ Mulai Kuis") : "🔒 Segera Hadir"}
+            </a>
+          </div>
+        `;
+
+        wadah.appendChild(kartu);
+      });
+
+      // Perbarui badge total bintang & bar progres di bagian atas
+      document.getElementById("teks-total-bintang").innerText = `${totalDidapat} / ${totalMaksimal} Bintang`;
+      const persentase = totalMaksimal > 0 ? Math.round((totalDidapat / totalMaksimal) * 100) : 0;
+      document.getElementById("persen-progres").innerText = `${persentase}%`;
+      document.getElementById("bar-progres").style.width = `${persentase}%`;
+    }
+
+    renderHalamanKuis();
+  </script>
+
+</body>
+</html>

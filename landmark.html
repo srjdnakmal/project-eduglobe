@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Eksplor Landmark 3D — EduGlobe</title>
+  <!-- Font Ramah Anak dari Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      overflow: hidden;
+      background-color: #090d16;
+      background-image:
+        radial-gradient(2px 2px at 15% 20%, #ffffff 60%, transparent 100%),
+        radial-gradient(2px 2px at 35% 75%, #fef08a 60%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 55% 15%, #ffffff 60%, transparent 100%),
+        radial-gradient(2.5px 2.5px at 78% 30%, #bae6fd 60%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 85% 70%, #ffffff 60%, transparent 100%),
+        radial-gradient(2px 2px at 22% 55%, #ffffff 60%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 68% 85%, #fef08a 60%, transparent 100%),
+        radial-gradient(circle at 50% 50%, #172554 0%, #090d16 75%);
+      font-family: 'Nunito', sans-serif;
+      color: #1e293b;
+    }
+
+    /* =========================================
+       BAR NAVIGASI & JUDUL MENGAMBANG
+       ========================================= */
+    .top-bar {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      right: 16px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .kiri-nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* Tombol Kembali ke Beranda */
+    .btn-beranda {
+      pointer-events: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #facc15;
+      color: #713f12;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 700;
+      padding: 11px 18px;
+      border-radius: 18px;
+      border: 3px solid #ca8a04;
+      box-shadow: 0 5px 0 #a16207;
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+      white-space: nowrap;
+    }
+
+    .btn-beranda:active {
+      transform: translateY(4px);
+      box-shadow: 0 1px 0 #a16207;
+    }
+
+    /* Kartu Judul Kartunis */
+    #header-judul {
+      pointer-events: auto;
+      background: #ffffff;
+      padding: 11px 20px;
+      border-radius: 20px;
+      border: 3px solid #38bdf8;
+      box-shadow: 0 5px 0 #0284c7;
+    }
+
+    #header-judul h1 {
+      font-size: 20px;
+      color: #0284c7;
+      line-height: 1.2;
+    }
+
+    #header-judul p {
+      margin-top: 2px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #475569;
+    }
+
+    /* =========================================
+       PIN FOTO 2D KARTUNIS DI ATAS PETA
+       ========================================= */
+    .pin-landmark {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      pointer-events: auto;
+      transform: scale(var(--skala-pin, 0.78));
+      transform-origin: center center;
+      will-change: transform;
+      transition: transform 0.08s linear;
+    }
+
+    .pin-landmark:hover {
+      transform: scale(calc(var(--skala-pin, 0.78) * 1.2));
+      z-index: 30;
+    }
+
+    .pin-landmark img {
+      width: 44px;
+      height: 44px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid #ffffff;
+      outline: 2.5px solid #f59e0b;
+      box-shadow: 0 4px 0 #b45309;
+      background-color: #fef3c7;
+    }
+
+    .pin-landmark span {
+      margin-top: 4px;
+      background: #14b8a6;
+      color: #ffffff;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 9px;
+      border-radius: 999px;
+      border: 2px solid #ffffff;
+      box-shadow: 0 2.5px 0 #0f766e;
+      white-space: nowrap;
+    }
+
+    /* =========================================
+       LAYAR POPUP DETAIL (STUDIO 3D + MATERI)
+       ========================================= */
+    #modal-detail {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(12, 74, 110, 0.86);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+
+    .kontainer-modal {
+      display: flex;
+      width: 94vw;
+      max-width: 1240px;
+      height: 86vh;
+      background: #ffffff;
+      border: 5px solid #2dd4bf;
+      box-shadow: 0 10px 0 #0d9488;
+      border-radius: 28px;
+      overflow: hidden;
+    }
+
+    /* Panel Kiri: Ruang Pamer 3D Cerah */
+    .panel-kiri-3d {
+      position: relative;
+      flex: 1.4;
+      background: radial-gradient(circle at center, #f0f9ff 0%, #bae6fd 65%, #7dd3fc 100%);
+      border-right: 4px solid #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #kanvas-3d-besar {
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+      touch-action: none;
+    }
+
+    #kanvas-3d-besar:active {
+      cursor: grabbing;
+    }
+
+    .petunjuk-3d {
+      position: absolute;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #ffffff;
+      color: #0369a1;
+      font-size: 12.5px;
+      font-weight: 800;
+      padding: 7px 16px;
+      border-radius: 999px;
+      border: 3px solid #38bdf8;
+      box-shadow: 0 4px 0 #0284c7;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    #pesan-loading-3d {
+      position: absolute;
+      background: #ffffff;
+      color: #0f172a;
+      font-weight: 800;
+      font-size: 14px;
+      padding: 10px 18px;
+      border-radius: 16px;
+      border: 3px solid #facc15;
+      box-shadow: 0 4px 0 #ca8a04;
+      pointer-events: none;
+      text-align: center;
+      margin: 0 16px;
+    }
+
+    /* Panel Kanan: Penjelasan Lengkap Ramah Anak */
+    .panel-kanan-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 26px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      background: #ffffff;
+    }
+
+    .baris-atas-kanan {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    #detail-wilayah {
+      background: #ccfbf1;
+      color: #0f766e;
+      border: 2px solid #2dd4bf;
+      font-weight: 800;
+      font-size: 13px;
+      padding: 5px 14px;
+      border-radius: 999px;
+    }
+
+    #tombol-tutup-modal {
+      background: #f43f5e;
+      color: #ffffff;
+      border: 3px solid #be123c;
+      box-shadow: 0 4px 0 #9f1239;
+      padding: 7px 16px;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    #tombol-tutup-modal:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #9f1239;
+    }
+
+    #detail-judul {
+      font-size: 28px;
+      color: #0f172a;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .info-singkat {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .tag-info {
+      font-size: 12.5px;
+      font-weight: 800;
+      padding: 5px 12px;
+      border-radius: 12px;
+    }
+
+    .tag-tahun {
+      background: #e0f2fe;
+      border: 2px solid #7dd3fc;
+      color: #0369a1;
+    }
+
+    .tag-kategori {
+      background: #f3e8ff;
+      border: 2px solid #d8b4fe;
+      color: #6b21a8;
+    }
+
+    .sub-judul {
+      display: inline-block;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 15px;
+      color: #0284c7;
+      margin: 14px 0 6px 0;
+    }
+
+    .teks-penjelasan {
+      font-size: 15px;
+      line-height: 1.65;
+      color: #334155;
+      font-weight: 700;
+    }
+
+    .kotak-fakta {
+      margin-top: 18px;
+      background: #fef9c3;
+      border: 3px solid #facc15;
+      box-shadow: 0 5px 0 #eab308;
+      padding: 14px 16px;
+      border-radius: 18px;
+      font-size: 14px;
+      line-height: 1.6;
+      font-weight: 800;
+      color: #713f12;
+    }
+
+    /* =========================================
+       RESPONSIF LAYAR MOBILE (HP)
+       ========================================= */
+    @media (max-width: 850px) {
+      .top-bar {
+        top: 12px;
+        left: 12px;
+        right: 12px;
+      }
+
+      .btn-beranda {
+        font-size: 14px;
+        padding: 9px 14px;
+        border-radius: 14px;
+      }
+
+      #header-judul {
+        padding: 9px 14px;
+        border-radius: 16px;
+        flex: 1;
+      }
+
+      #header-judul h1 {
+        font-size: 16px;
+      }
+
+      #header-judul p {
+        font-size: 11.5px;
+      }
+
+      #modal-detail {
+        padding: 10px;
+      }
+
+      .kontainer-modal {
+        flex-direction: column;
+        width: 96vw;
+        height: 92vh;
+        border-width: 4px;
+        border-radius: 22px;
+      }
+
+      .panel-kiri-3d {
+        flex: 1;
+        border-right: none;
+        border-bottom: 4px solid #cbd5e1;
+      }
+
+      .panel-kanan-info {
+        flex: 1.15;
+        padding: 18px;
+      }
+
+      #detail-judul {
+        font-size: 22px;
+      }
+
+      .petunjuk-3d {
+        font-size: 11px;
+        padding: 5px 12px;
+      }
+    }
+
+    /* =========================================
+       LAYAR LOADING GLOBE 3D
+       ========================================= */
+    #layar-loading-globe {
+      position: fixed;
+      inset: 0;
+      z-index: 999999;
+      background-color: #090d16;
+      background-image: radial-gradient(circle at 50% 50%, #172554 0%, #090d16 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      transition: opacity 0.45s ease, visibility 0.45s ease;
+    }
+
+    #layar-loading-globe.sembunyi {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .kartu-loading {
+      background: #ffffff;
+      border: 4px solid #38bdf8;
+      box-shadow: 0 8px 0 #0284c7;
+      border-radius: 26px;
+      padding: 26px 32px;
+      text-align: center;
+      max-width: 320px;
+      width: 100%;
+    }
+
+    .ikon-bumi-loading {
+      font-size: 54px;
+      display: inline-block;
+      animation: lompatBumi 1.1s ease-in-out infinite;
+    }
+
+    @keyframes lompatBumi {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50%      { transform: translateY(-10px) rotate(12deg); }
+    }
+
+    .kartu-loading h2 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 20px;
+      color: #0284c7;
+      margin-top: 10px;
+    }
+
+    .kartu-loading p {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #64748b;
+      margin-top: 4px;
+    }
+
+    .rel-loading {
+      margin-top: 16px;
+      width: 100%;
+      height: 12px;
+      background: #e0f2fe;
+      border: 2px solid #7dd3fc;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .isi-loading {
+      width: 45%;
+      height: 100%;
+      background: linear-gradient(90deg, #facc15, #f59e0b);
+      border-radius: 999px;
+      animation: geserLoading 1.2s ease-in-out infinite;
+    }
+
+    @keyframes geserLoading {
+      0%   { transform: translateX(-100%); }
+      100% { transform: translateX(240%); }
+    }
+
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/globe.gl@2.27.2/dist/globe.gl.min.js"></script>
+</head>
+<body>
+
+  <!-- Layar Loading Bola Dunia -->
+  <div id="layar-loading-globe">
+    <div class="kartu-loading">
+      <div class="ikon-bumi-loading">🌍</div>
+      <h2>Menyiapkan Bola Dunia...</h2>
+      <p>Memuat peta pulau dan ikon petualangan</p>
+      <div class="rel-loading">
+        <div class="isi-loading"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigasi & Judul Atas -->
+  <div class="top-bar">
+    <div class="kiri-nav">
+      <a href="index.html" class="btn-beranda">← Beranda</a>
+      <div id="header-judul">
+        <h1>🏛️ Petualangan Landmark 3D</h1>
+        <p>Ketuk foto landmark di bola dunia untuk memutar model 3D-nya!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wadah Bola Dunia -->
+  <div id="wadah-bumi"></div>
+
+  <!-- Layar Popup Detail (Kiri 3D + Kanan Penjelasan) -->
+  <div id="modal-detail">
+    <div class="kontainer-modal">
+      <div class="panel-kiri-3d">
+        <div id="pesan-loading-3d">Menyiapkan model 3D...</div>
+        <div id="kanvas-3d-besar"></div>
+        <div class="petunjuk-3d">👆 Geser untuk memutar 3D • 🔍 Cubit/Scroll untuk zoom</div>
+      </div>
+
+      <div class="panel-kanan-info">
+        <div class="baris-atas-kanan">
+          <span id="detail-wilayah">Provinsi</span>
+          <button id="tombol-tutup-modal">✕ Tutup</button>
+        </div>
+
+        <h2 id="detail-judul">Judul Landmark</h2>
+
+        <div class="info-singkat">
+          <span class="tag-info tag-tahun" id="detail-tahun">📅 Tahun: -</span>
+          <span class="tag-info tag-kategori" id="detail-kategori">🏷️ Kategori: -</span>
+        </div>
+
+        <div class="sub-judul">📜 Sejarah & Latar Belakang</div>
+        <p class="teks-penjelasan" id="detail-sejarah"></p>
+
+        <div class="sub-judul">🏗️ Arsitektur & Keistimewaan</div>
+        <p class="teks-penjelasan" id="detail-arsitektur"></p>
+
+        <div class="kotak-fakta" id="detail-fakta"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panggil database landmark dari file terpisah -->
+  <script src="data-landmark.js"></script>
+
+  <script>
+    setTimeout(() => {
+      const layarLoading = document.getElementById('layar-loading-globe');
+      if (layarLoading) layarLoading.classList.add('sembunyi');
+    }, 5000);
+    // Deteksi perangkat mobile untuk optimasi performa
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth <= 850;
+    const batasPixelRatio = Math.min(window.devicePixelRatio || 1, isMobile ? 1.25 : 2);
+
+    const fotoCadanganSVG = "data:image/svg+xml;utf8," + encodeURIComponent(`
+      <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
+        <rect width="100" height="100" fill="#fef3c7"/>
+        <polygon points="50,20 78,74 22,74" fill="#14b8a6" stroke="#0f766e" stroke-width="4" stroke-linejoin="round"/>
+        <circle cx="50" cy="20" r="7" fill="#facc15" stroke="#ca8a04" stroke-width="3"/>
+      </svg>
+    `);
+
+    // ==========================================
+    // 2. BOLA DUNIA KARTUNIS & SARINGAN PULAU KECIL
+    // ==========================================
+    const wadahBumi = document.getElementById('wadah-bumi');
+    const bumi = Globe({
+      rendererConfig: {
+        antialias: !isMobile,
+        powerPreference: 'high-performance'
+      }
+    })(wadahBumi)
+      .backgroundColor('rgba(0,0,0,0)')
+      .showAtmosphere(!isMobile)
+      .atmosphereColor('#38bdf8')
+      .atmosphereAltitude(0.18);
+
+    if (bumi.renderer) {
+      bumi.renderer().setPixelRatio(batasPixelRatio);
+    }
+
+    // Pencahayaan cerah pada bola dunia agar warnanya ceria
+    bumi.scene().add(new THREE.AmbientLight(0xffffff, 1.1));
+
+    const materialLaut = bumi.globeMaterial();
+    materialLaut.color.set('#0284c7');
+    materialLaut.roughness = 0.65;
+
+    function hitungLuasPulau(koordinatLuar) {
+      let minLng = Infinity, maxLng = -Infinity;
+      let minLat = Infinity, maxLat = -Infinity;
+
+      for (let i = 0; i < koordinatLuar.length; i++) {
+        const lng = koordinatLuar[i][0];
+        const lat = koordinatLuar[i][1];
+        if (lng < minLng) minLng = lng;
+        if (lng > maxLng) maxLng = lng;
+        if (lat < minLat) minLat = lat;
+        if (lat > maxLat) maxLat = lat;
+      }
+
+      return (maxLng - minLng) * (maxLat - minLat);
+    }
+
+    function saringPulauKecil(dataNegara) {
+      const hasilFilter = [];
+
+      dataNegara.features.forEach(negara => {
+        const isIndonesia = negara.properties.ADMIN === 'Indonesia';
+        const batasMinimal = isIndonesia ? 0.15 : 2.5;
+        const geom = negara.geometry;
+
+        if (!geom) return;
+
+        if (geom.type === 'Polygon') {
+          if (hitungLuasPulau(geom.coordinates[0]) >= batasMinimal) {
+            hasilFilter.push(negara);
+          }
+        } else if (geom.type === 'MultiPolygon') {
+          const poligonBesar = geom.coordinates.filter(poly => {
+            return hitungLuasPulau(poly[0]) >= batasMinimal;
+          });
+
+          if (poligonBesar.length > 0) {
+            hasilFilter.push({
+              ...negara,
+              geometry: {
+                type: 'MultiPolygon',
+                coordinates: poligonBesar
+              }
+            });
+          }
+        }
+      });
+
+      return hasilFilter;
+    }
+
+    const urlPetaDetail = 'https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@master/geojson/ne_50m_admin_0_countries.geojson';
+    const urlPetaCadangan = 'https://cdn.jsdelivr.net/gh/vasturiano/globe.gl@master/example/datasets/ne_110m_admin_0_countries.geojson';
+
+    function pasangPetaPulau(dataNegara) {
+      const pulauTerpilih = saringPulauKecil(dataNegara);
+
+      bumi
+        .polygonsData(pulauTerpilih)
+        .polygonAltitude(negara => negara.properties.ADMIN === 'Indonesia' ? 0.028 : 0.01)
+        .polygonCapColor(negara => negara.properties.ADMIN === 'Indonesia' ? '#22c55e' : '#fde047')
+        .polygonSideColor(negara => negara.properties.ADMIN === 'Indonesia' ? '#15803d' : '#ca8a04');
+
+      if (!isMobile) {
+        bumi.polygonStrokeColor(() => '#0369a1');
+      }
+      if (!isMobile) {
+        bumi.polygonStrokeColor(() => '#0369a1');
+      }
+
+      // Beri jeda 2 frame agar GPU selesai menggambar pulau sebelum tirai loading dibuka
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          const layarLoading = document.getElementById('layar-loading-globe');
+          if (layarLoading) layarLoading.classList.add('sembunyi');
+        }, 250);
+      });
+    }
+
+    fetch(urlPetaDetail)
+      .then(res => res.json())
+      .then(dataNegara => pasangPetaPulau(dataNegara))
+      .catch(() => {
+        fetch(urlPetaCadangan)
+          .then(res => res.json())
+          .then(dataNegara => pasangPetaPulau(dataNegara));
+      });
+
+    // Pasang Pin Foto Kartunis
+    // Pasang Pin Foto Kartunis (dengan pembungkus agar scale tidak tertimpa)
+    bumi
+      .htmlElementsData(dataLandmark)
+      .htmlLat('lat')
+      .htmlLng('lng')
+      .htmlAltitude(0.032)
+      .htmlElement(item => {
+        const pembungkus = document.createElement('div');
+        const kartuPin = document.createElement('div');
+        kartuPin.className = 'pin-landmark';
+
+        const gambar = document.createElement('img');
+        gambar.src = item.foto;
+        gambar.alt = item.nama;
+        gambar.onerror = () => { gambar.src = fotoCadanganSVG; };
+
+        const label = document.createElement('span');
+        label.innerText = item.labelPendek;
+
+        kartuPin.appendChild(gambar);
+        kartuPin.appendChild(label);
+
+        kartuPin.addEventListener('click', (e) => {
+          e.stopPropagation();
+          bukaLayarDetail(item);
+        });
+
+        pembungkus.appendChild(kartuPin);
+        return pembungkus;
+      });
+
+    bumi.pointOfView({ lat: -2.5, lng: 118.0, altitude: isMobile ? 1.75 : 1.45 });
+
+    // Perkecil pin secara proporsional mengikuti jarak kamera saat zoom out
+    function perbaruiSkalaPinLandmark() {
+      const jarakKamera = bumi.camera().position.length();
+      const skala = Math.max(0.28, Math.min(1.05, 190 / jarakKamera));
+      wadahBumi.style.setProperty('--skala-pin', skala.toFixed(3));
+    }
+
+    perbaruiSkalaPinLandmark();
+    bumi.controls().addEventListener('change', perbaruiSkalaPinLandmark);
+
+    // ==========================================
+    // 3. STUDIO 3D CERAH (HANYA AKTIF SAAT DIBUKA)
+    // ==========================================
+    const wadahKanvas3D = document.getElementById('kanvas-3d-besar');
+    const pesanLoading = document.getElementById('pesan-loading-3d');
+
+    const sceneStudio = new THREE.Scene();
+    const kameraStudio = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+    kameraStudio.position.set(0, 2.5, 6.2);
+
+    const rendererStudio = new THREE.WebGLRenderer({
+      antialias: !isMobile,
+      alpha: true,
+      powerPreference: 'high-performance'
+    });
+    rendererStudio.setPixelRatio(batasPixelRatio);
+    wadahKanvas3D.appendChild(rendererStudio.domElement);
+
+    // Pencahayaan studio cerah
+    sceneStudio.add(new THREE.AmbientLight(0xffffff, 1.3));
+    const lampuDepan = new THREE.DirectionalLight(0xffffff, 1.2);
+    lampuDepan.position.set(5, 10, 7);
+    sceneStudio.add(lampuDepan);
+
+    if (!isMobile) {
+      const lampuBelakang = new THREE.DirectionalLight(0xfef08a, 0.6);
+      lampuBelakang.position.set(-5, 5, -7);
+      sceneStudio.add(lampuBelakang);
+    }
+
+    // Panggung rumput hijau kartunis di bawah bangunan 3D
+    const alasPanggung = new THREE.Mesh(
+      new THREE.CylinderGeometry(2.3, 2.5, 0.22, isMobile ? 28 : 48),
+      new THREE.MeshStandardMaterial({ color: '#4ade80', roughness: 0.55 })
+    );
+    alasPanggung.position.y = -0.11;
+    sceneStudio.add(alasPanggung);
+
+    const kontrolPutar = new THREE.OrbitControls(kameraStudio, rendererStudio.domElement);
+    kontrolPutar.enableDamping = true;
+    kontrolPutar.dampingFactor = 0.08;
+    kontrolPutar.target.set(0, 1.3, 0);
+    kontrolPutar.minDistance = 2.5;
+    kontrolPutar.maxDistance = 12;
+    kontrolPutar.autoRotate = true;
+    kontrolPutar.autoRotateSpeed = 1.6;
+
+    kontrolPutar.addEventListener('start', () => {
+      kontrolPutar.autoRotate = false;
+    });
+
+    const pembacaGLTF = new THREE.GLTFLoader();
+    let model3DAktif = null;
+    let idAnimasiStudio = null;
+    let modalSedangBuka = false;
+
+    function sesuaikanUkuranKanvas3D() {
+      const lebar = wadahKanvas3D.clientWidth;
+      const tinggi = wadahKanvas3D.clientHeight;
+      if (lebar > 0 && tinggi > 0) {
+        kameraStudio.aspect = lebar / tinggi;
+        kameraStudio.updateProjectionMatrix();
+        rendererStudio.setSize(lebar, tinggi);
+      }
+    }
+
+    window.addEventListener('resize', () => {
+      if (modalSedangBuka) sesuaikanUkuranKanvas3D();
+    });
+
+    function jalankanAnimasiStudio() {
+      if (!modalSedangBuka) return;
+      idAnimasiStudio = requestAnimationFrame(jalankanAnimasiStudio);
+      kontrolPutar.update();
+      rendererStudio.render(sceneStudio, kameraStudio);
+    }
+
+    function bersihkanModelLama() {
+      if (!model3DAktif) return;
+      sceneStudio.remove(model3DAktif);
+      model3DAktif.traverse((bagian) => {
+        if (bagian.isMesh) {
+          if (bagian.geometry) bagian.geometry.dispose();
+          if (bagian.material) {
+            if (Array.isArray(bagian.material)) {
+              bagian.material.forEach(mat => mat.dispose());
+            } else {
+              bagian.material.dispose();
+            }
+          }
+        }
+      });
+      model3DAktif = null;
+    }
+
+    // ==========================================
+    // 4. BUKA & TUTUP LAYAR DETAIL
+    // ==========================================
+    function bukaLayarDetail(item) {
+      document.getElementById('detail-wilayah').innerText = item.wilayah;
+      document.getElementById('detail-judul').innerText = item.nama;
+      document.getElementById('detail-tahun').innerText = item.tahun;
+      document.getElementById('detail-kategori').innerText = item.kategori;
+      document.getElementById('detail-sejarah').innerText = item.sejarah;
+      document.getElementById('detail-arsitektur').innerText = item.arsitektur;
+      document.getElementById('detail-fakta').innerText = item.fakta;
+
+      if (bumi.pauseAnimation) bumi.pauseAnimation();
+
+      document.getElementById('modal-detail').style.display = 'flex';
+      modalSedangBuka = true;
+      sesuaikanUkuranKanvas3D();
+
+      if (idAnimasiStudio) cancelAnimationFrame(idAnimasiStudio);
+      jalankanAnimasiStudio();
+
+      kameraStudio.position.set(0, 2.5, 6.2);
+      kontrolPutar.target.set(0, 1.3, 0);
+      kontrolPutar.autoRotate = true;
+
+      bersihkanModelLama();
+
+      pesanLoading.style.display = 'block';
+      pesanLoading.innerText = `⏳ Menyiapkan model 3D ${item.nama}...`;
+
+      pembacaGLTF.load(
+        item.fileModel,
+        function (hasil) {
+          if (!modalSedangBuka) return;
+          pesanLoading.style.display = 'none';
+          const model = hasil.scene;
+
+          const kotakBatas = new THREE.Box3().setFromObject(model);
+          const dimensi = new THREE.Vector3();
+          kotakBatas.getSize(dimensi);
+
+          const sisiTerpanjang = Math.max(dimensi.x, dimensi.y, dimensi.z) || 1;
+          model.scale.setScalar(3.4 / sisiTerpanjang);
+
+          const kotakBaru = new THREE.Box3().setFromObject(model);
+          const titikTengah = new THREE.Vector3();
+          kotakBaru.getCenter(titikTengah);
+
+          model.position.x = -titikTengah.x;
+          model.position.z = -titikTengah.z;
+          model.position.y = -kotakBaru.min.y;
+
+          model3DAktif = model;
+          sceneStudio.add(model3DAktif);
+        },
+        undefined,
+        function () {
+          pesanLoading.innerText = `📁 File "${item.fileModel}" belum ada di folder models/`;
+        }
+      );
+    }
+
+    function tutupLayarDetail() {
+      modalSedangBuka = false;
+      if (idAnimasiStudio) {
+        cancelAnimationFrame(idAnimasiStudio);
+        idAnimasiStudio = null;
+      }
+      bersihkanModelLama();
+      document.getElementById('modal-detail').style.display = 'none';
+
+      if (bumi.resumeAnimation) bumi.resumeAnimation();
+    }
+
+    document.getElementById('tombol-tutup-modal').addEventListener('click', tutupLayarDetail);
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modalSedangBuka) {
+        tutupLayarDetail();
+      }
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,53 @@
+dataAsiaTenggara.push(
+      {
+        adminGeo: "Australia",
+        nama: "Australia",
+        ibukota: "Canberra",
+        bendera: "🇦🇺",
+        lat: -35.2809,
+        lng: 149.1300,
+        warnaDaratan: "#eab308",
+        warnaSisi: "#a16207",
+        kawasan: "🦘 Kawasan Oseania",
+        bahasa: "Bahasa Inggris",
+        mataUang: "Dolar Australia (AUD)",
+        julukan: "Negeri Kanguru",
+        deskripsi: "Australia adalah negara kepulauan raksasa sekaligus benua terkecil di dunia yang dikelilingi oleh Samudra Hindia dan Samudra Pasifik.",
+        budaya: "Mewarisi seni lukis titik dan alat musik tiup tradisional Didgeridoo dari penduduk asli suku Aborigin, serta terkenal dengan Gedung Opera Sydney.",
+        fakta: "💡 Fakta Unik: Australia menjadi rumah bagi satwa berkantung (marsupial) unik yang tidak hidup liar di benua lain, seperti kanguru, koala, dan wombat!"
+      },
+      {
+        adminGeo: "Papua New Guinea",
+        nama: "Papua Nugini",
+        ibukota: "Port Moresby",
+        bendera: "🇵🇬",
+        lat: -9.4438,
+        lng: 147.1803,
+        warnaDaratan: "#f97316",
+        warnaSisi: "#c2410c",
+        kawasan: "🦘 Kawasan Oseania",
+        bahasa: "Tok Pisin, Inggris, Hiri Motu",
+        mataUang: "Kina (PGK)",
+        julukan: "Negeri Burung Cenderawasih",
+        deskripsi: "Papua Nugini menempati bagian timur Pulau Papua (berbatasan darat langsung dengan Provinsi Papua, Indonesia) beserta ratusan pulau di sekitarnya.",
+        budaya: "Memiliki ratusan suku adat dengan festival budaya meriah seperti Sing-Sing, hiasan kepala bulu burung cenderawasih, dan rumah adat tradisional.",
+        fakta: "💡 Fakta Unik: Papua Nugini adalah negara dengan keragaman bahasa terbanyak di dunia—lebih dari 800 bahasa daerah dituturkan oleh penduduknya!"
+      },
+      {
+        adminGeo: "New Zealand",
+        nama: "Selandia Baru (New Zealand)",
+        ibukota: "Wellington",
+        bendera: "🇳🇿",
+        lat: -41.2865,
+        lng: 174.7762,
+        warnaDaratan: "#ec4899",
+        warnaSisi: "#be185d",
+        kawasan: "🦘 Kawasan Oseania",
+        bahasa: "Inggris & Maori",
+        mataUang: "Dolar Selandia Baru (NZD)",
+        julukan: "Negeri Awan Putih Panjang (Aotearoa)",
+        deskripsi: "Selandia Baru terdiri dari dua pulau utama (Pulau Utara dan Pulau Selatan) di barat daya Samudra Pasifik dengan pegunungan bersalju dan padang rumput hijau.",
+        budaya: "Mewarisi budaya suku asli Maori yang terkenal dengan tarian semangat Haka, seni ukir kayu, serta salam tradisional saling menempelkan hidung bernama Hongi.",
+        fakta: "💡 Fakta Unik: Selandia Baru menjadi habitat burung Kiwi yang tidak bisa terbang dan menjadi simbol nasional negara ini, serta memiliki jumlah domba lebih banyak daripada penduduknya!"
+      }
+);

@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduGlobe — Petualangan Belajar Dunia 3D</title>
+  <!-- Font Ramah Anak dari Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #e0f2fe;
+      background-image:
+        radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.85) 0%, transparent 18%),
+        radial-gradient(circle at 88% 12%, rgba(255, 255, 255, 0.85) 0%, transparent 22%),
+        radial-gradient(circle at 75% 75%, rgba(186, 230, 253, 0.7) 0%, transparent 30%),
+        linear-gradient(180deg, #bae6fd 0%, #f0f9ff 55%, #fef9c3 100%);
+      color: #1e293b;
+      font-family: 'Nunito', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    h1, h2, h3, .brand-text, .btn-kartun {
+      font-family: 'Fredoka', sans-serif;
+      letter-spacing: 0.3px;
+    }
+
+    /* =========================================
+       NAVIGASI ATAS (PLAYFUL HEADER)
+       ========================================= */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 6%;
+      background: #ffffff;
+      border-bottom: 4px solid #cbd5e1;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      background: #38bdf8;
+      border: 3px solid #0284c7;
+      box-shadow: 0 4px 0 #0284c7;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .brand-text {
+      font-size: 25px;
+      font-weight: 700;
+      color: #0284c7;
+      text-shadow: 1px 2px 0 #bae6fd;
+    }
+
+    .paspor-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #fef08a;
+      border: 3px solid #eab308;
+      box-shadow: 0 4px 0 #ca8a04;
+      padding: 7px 16px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 800;
+      color: #854d0e;
+    }
+
+    /* =========================================
+       KONTAINER UTAMA
+       ========================================= */
+    .container {
+      width: 100%;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 28px 20px 48px;
+      flex: 1;
+    }
+
+    /* =========================================
+       BANNER SAMBUTAN & MASKOT BUMI KARTUN
+       ========================================= */
+    .hero {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+      background: #ffffff;
+      border: 4px solid #38bdf8;
+      box-shadow: 0 8px 0 #0284c7;
+      border-radius: 28px;
+      padding: 30px 36px;
+      margin-bottom: 34px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-text {
+      max-width: 600px;
+      z-index: 2;
+    }
+
+    .pill-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #dcfce7;
+      color: #15803d;
+      border: 2px solid #4ade80;
+      font-size: 13px;
+      font-weight: 800;
+      padding: 5px 14px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+    }
+
+    .hero h1 {
+      font-size: 33px;
+      line-height: 1.22;
+      color: #0f172a;
+      margin-bottom: 12px;
+    }
+
+    .hero h1 span {
+      color: #0284c7;
+    }
+
+    .hero p {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #475569;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .hero-chips {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      background: #f1f5f9;
+      border: 2px solid #cbd5e1;
+      color: #334155;
+      font-size: 13px;
+      font-weight: 800;
+      padding: 6px 12px;
+      border-radius: 12px;
+    }
+
+    /* Maskot SVG Kartun Bumi (Super Ringan & Tajam) */
+    .hero-mascot {
+      flex-shrink: 0;
+      width: 175px;
+      height: 175px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: mengapung 3.2s ease-in-out infinite;
+    }
+
+    @keyframes mengapung {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* =========================================
+       JUDUL PILIHAN MENU
+       ========================================= */
+    .section-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .section-header h2 {
+      font-size: 25px;
+      color: #0f172a;
+      margin-bottom: 4px;
+    }
+
+    .section-header p {
+      font-size: 15px;
+      font-weight: 700;
+      color: #475569;
+    }
+
+    /* =========================================
+       GRID 4 KARTU MENU KARTUNIS
+       ========================================= */
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 22px;
+    }
+
+    .menu-card {
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 24px;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    /* Efek Membal Saat Disentuh / Diklik */
+    .menu-card:active {
+      transform: translateY(5px);
+    }
+
+    /* Warna Khusus Tiap Kartu (Color Coding) */
+    .card-landmark {
+      border: 4px solid #2dd4bf;
+      box-shadow: 0 8px 0 #0d9488;
+    }
+    .card-landmark:active { box-shadow: 0 3px 0 #0d9488; }
+
+    .card-negara {
+      border: 4px solid #38bdf8;
+      box-shadow: 0 8px 0 #0284c7;
+    }
+    .card-negara:active { box-shadow: 0 3px 0 #0284c7; }
+
+    .card-kuis {
+      border: 4px solid #fbbf24;
+      box-shadow: 0 8px 0 #d97706;
+    }
+    .card-kuis:active { box-shadow: 0 3px 0 #d97706; }
+
+    .card-materi {
+      border: 4px solid #c084fc;
+      box-shadow: 0 8px 0 #7e22ce;
+    }
+    .card-materi:active { box-shadow: 0 3px 0 #7e22ce; }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .card-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      border: 3px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .bg-mint   { background: #ccfbf1; }
+    .bg-sky    { background: #e0f2fe; }
+    .bg-yellow { background: #fef3c7; }
+    .bg-purple { background: #f3e8ff; }
+
+    .badge-label {
+      font-size: 12px;
+      font-weight: 800;
+      padding: 5px 12px;
+      border-radius: 999px;
+    }
+
+    .badge-mint   { background: #ccfbf1; color: #0f766e; }
+    .badge-sky    { background: #e0f2fe; color: #0369a1; }
+    .badge-yellow { background: #fef3c7; color: #b45309; }
+    .badge-purple { background: #f3e8ff; color: #6b21a8; }
+
+    .menu-card h3 {
+      font-size: 22px;
+      color: #0f172a;
+      margin-bottom: 8px;
+    }
+
+    .menu-card p {
+      font-size: 15px;
+      line-height: 1.55;
+      color: #475569;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    /* Tombol Aksi di Bawah Setiap Kartu */
+    .btn-kartun {
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 12px 16px;
+      border-radius: 16px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .btn-mint   { background: #14b8a6; box-shadow: 0 4px 0 #0f766e; }
+    .btn-sky    { background: #0ea5e9; box-shadow: 0 4px 0 #0369a1; }
+    .btn-yellow { background: #f59e0b; box-shadow: 0 4px 0 #b45309; }
+    .btn-purple { background: #9333ea; box-shadow: 0 4px 0 #6b21a8; }
+
+    @media (hover: hover) {
+      .menu-card:hover {
+        transform: translateY(-4px);
+      }
+    }
+
+    /* =========================================
+       FOOTER
+       ========================================= */
+    footer {
+      text-align: center;
+      padding: 18px;
+      font-size: 14px;
+      font-weight: 800;
+      color: #475569;
+      background: #ffffff;
+      border-top: 3px solid #cbd5e1;
+    }
+
+    /* =========================================
+       RESPONSIF MOBILE (HP)
+       ========================================= */
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 12px 16px;
+      }
+
+      .brand-icon {
+        width: 38px;
+        height: 38px;
+        font-size: 20px;
+      }
+
+      .brand-text {
+        font-size: 21px;
+      }
+
+      .paspor-badge {
+        font-size: 13px;
+        padding: 6px 12px;
+      }
+
+      .container {
+        padding: 18px 16px 36px;
+      }
+
+      .hero {
+        flex-direction: column-reverse;
+        text-align: center;
+        padding: 24px 20px;
+        gap: 16px;
+      }
+
+      .hero h1 {
+        font-size: 25px;
+      }
+
+      .hero p {
+        font-size: 14.5px;
+      }
+
+      .hero-chips {
+        justify-content: center;
+      }
+
+      .hero-mascot {
+        width: 125px;
+        height: 125px;
+      }
+
+      .menu-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+
+      .menu-card {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigasi Atas -->
+  <nav class="navbar">
+    <a href="index.html" class="brand">
+      <div class="brand-icon">🌍</div>
+      <span class="brand-text">EduGlobe</span>
+    </a>
+
+    <div class="paspor-badge" title="Kumpulkan cap paspor dari kuis di Eksplor Negara!">
+      <span>🛂</span>
+      <span id="paspor-tersimpan">0 Paspor</span>
+    </div>
+  </nav>
+
+  <!-- Konten Utama -->
+  <main class="container">
+
+    <!-- Banner Sambutan dengan Maskot Kartun Bumi -->
+    <section class="hero">
+      <div class="hero-text">
+        <div class="pill-tag">🚀 Petualangan Dunia untuk Siswa</div>
+        <h1>Ayo Jelajahi Dunia Bersama <span>EduGlobe!</span></h1>
+        <p>
+          Putar bangunan 3D raksasa, kenali bendera dan budaya berbagai negara, baca cerita serunya, lalu kumpulkan bintang lewat kuis!
+        </p>
+        <div class="hero-chips">
+          <span class="chip">🏛️ Model 3D Seru</span>
+          <span class="chip">🗺️ Peta Interaktif</span>
+          <span class="chip">🏆 Kuis Berhadiah Bintang</span>
+        </div>
+      </div>
+
+      <!-- Ilustrasi Kartun Bola Dunia Tersenyum (Pure SVG) -->
+      <div class="hero-mascot" aria-hidden="true">
+        <svg viewBox="0 0 200 200" width="100%" height="100%">
+          <!-- Aura Latar -->
+          <circle cx="100" cy="100" r="92" fill="#e0f2fe" />
+          <!-- Badan Bumi -->
+          <circle cx="100" cy="102" r="76" fill="#38bdf8" stroke="#0284c7" stroke-width="6"/>
+          <!-- Daratan / Pulau Kartun -->
+          <path d="M52 72 Q70 55 92 68 Q106 78 90 95 Q75 106 58 92 Z" fill="#4ade80" stroke="#16a34a" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M115 62 Q142 58 154 80 Q162 102 138 112 Q118 114 114 92 Z" fill="#4ade80" stroke="#16a34a" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M72 132 Q95 126 116 138 Q126 154 102 162 Q78 164 68 148 Z" fill="#4ade80" stroke="#16a34a" stroke-width="4" stroke-linejoin="round"/>
+          <!-- Mata Kiri & Kanan -->
+          <circle cx="78" cy="98" r="8" fill="#0f172a"/>
+          <circle cx="75" cy="95" r="3" fill="#ffffff"/>
+          <circle cx="122" cy="98" r="8" fill="#0f172a"/>
+          <circle cx="119" cy="95" r="3" fill="#ffffff"/>
+          <!-- Pipi Merona -->
+          <ellipse cx="64" cy="110" rx="8" ry="5" fill="#fda4af" opacity="0.85"/>
+          <ellipse cx="136" cy="110" rx="8" ry="5" fill="#fda4af" opacity="0.85"/>
+          <!-- Senyum Ceria -->
+          <path d="M88 113 Q100 126 112 113" fill="none" stroke="#0f172a" stroke-width="5" stroke-linecap="round"/>
+          <!-- Topi Penjelajah / Wisuda Mini -->
+          <polygon points="100,12 142,28 100,44 58,28" fill="#facc15" stroke="#ca8a04" stroke-width="4" stroke-linejoin="round"/>
+          <rect x="82" y="34" width="36" height="10" rx="4" fill="#eab308" stroke="#ca8a04" stroke-width="3"/>
+          <line x1="138" y1="29" x2="146" y2="48" stroke="#ea580c" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="146" cy="50" r="4" fill="#ea580c"/>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Judul Pilihan Menu -->
+    <div class="section-header">
+      <h2>Mau Petualangan Apa Hari Ini?</h2>
+      <p>Ketuk salah satu kartu berwarna di bawah ini untuk mulai!</p>
+    </div>
+
+    <!-- Grid 4 Kartu Menu -->
+    <section class="menu-grid">
+
+      <!-- Kartu 1: Eksplor Landmark -->
+      <a href="landmark.html" class="menu-card card-landmark">
+        <div>
+          <div class="card-top">
+            <div class="card-icon bg-mint">🏛️</div>
+            <span class="badge-label badge-mint">✨ 3D Interaktif</span>
+          </div>
+          <h3>Eksplor Landmark</h3>
+          <p>
+            Lihat bangunan bersejarah seperti Monas, Borobudur, dan Jembatan Ampera dalam bentuk 3D yang bisa diputar 360 derajat!
+          </p>
+        </div>
+        <div class="btn-kartun btn-mint">Jelajahi Landmark →</div>
+      </a>
+
+      <!-- Kartu 2: Eksplor Negara -->
+      <a href="negara.html" class="menu-card card-negara">
+        <div>
+          <div class="card-top">
+            <div class="card-icon bg-sky">🗺️</div>
+            <span class="badge-label badge-sky">🌍 Peta Dunia</span>
+          </div>
+          <h3>Eksplor Negara</h3>
+          <p>
+            Kenali bendera warna-warni, ibu kota, bahasa, makanan khas, dan keunikan budaya dari berbagai negara di dunia.
+          </p>
+        </div>
+        <div class="btn-kartun btn-sky">Kenali Negara →</div>
+      </a>
+
+      <!-- Kartu 3: Kuis & Tantangan -->
+      <a href="kuis.html" class="menu-card card-kuis">
+        <div>
+          <div class="card-top">
+            <div class="card-icon bg-yellow">🎯</div>
+            <span class="badge-label badge-yellow">⭐ Kumpulkan Bintang</span>
+          </div>
+          <h3>Kuis & Tantangan</h3>
+          <p>
+            Uji ingatanmu lewat permainan tebak bendera, tebak bangunan bersejarah, dan pertanyaan seru berhadiah bintang!
+          </p>
+        </div>
+        <div class="btn-kartun btn-yellow">Mainkan Kuis →</div>
+      </a>
+
+      <!-- Kartu 4: Materi & Ensiklopedia -->
+      <a href="materi.html" class="menu-card card-materi">
+        <div>
+          <div class="card-top">
+            <div class="card-icon bg-purple">📚</div>
+            <span class="badge-label badge-purple">💡 Bacaan Ringkas</span>
+          </div>
+          <h3>Materi & Ensiklopedia</h3>
+          <p>
+            Baca cerita bergambar tentang 7 benua, keajaiban dunia, iklim bumi, dan fakta unik sebelum mulai mengerjakan kuis.
+          </p>
+        </div>
+        <div class="btn-kartun btn-purple">Baca Materi →</div>
+      </a>
+
+    </section>
+
+  </main>
+
+  <footer>
+    EduGlobe • Belajar Geografi & Budaya Jadi Lebih Seru! 🌟
+  </footer>
+
+  <script>
+    // Menampilkan jumlah paspor yang didapat dari menyelesaikan kuis di Eksplor Negara
+    function muatJumlahPaspor() {
+      const dataPaspor = localStorage.getItem('eduglobe_paspor');
+      let jumlahPaspor = 0;
+
+      if (dataPaspor) {
+        try {
+          const parsed = JSON.parse(dataPaspor);
+          jumlahPaspor = Array.isArray(parsed) ? parsed.length : (Number(parsed) || 0);
+        } catch (e) {
+          jumlahPaspor = Number(dataPaspor) || 0;
+        }
+      }
+
+      document.getElementById('paspor-tersimpan').innerText = jumlahPaspor + ' Paspor';
+    }
+
+    muatJumlahPaspor();
+  </script>
+
+</body>
+</html>
